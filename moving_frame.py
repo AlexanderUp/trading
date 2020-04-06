@@ -2,7 +2,6 @@
 # moving frame for trading related calculations
 
 import collections
-import time
 
 
 class MovingFrame():
@@ -18,6 +17,7 @@ class MovingFrame():
 
 
 if __name__ == '__main__':
+    import time
     print('=' * 125)
     # data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     data = [i for i in range(10000000)]
