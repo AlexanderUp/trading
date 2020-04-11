@@ -1,9 +1,9 @@
 # encoding:utf-8
 # moving average trading technical indicator
 
-import matplotlib.pyplot as plt
-import random
 from moving_frame import MovingFrame
+from plotter import Plotter
+from aux import get_random_bars
 
 
 class MovingAverage():
@@ -14,20 +14,6 @@ class MovingAverage():
         self.data = data
         self.moving_frame = MovingFrame(length=period, data=self.data)
         self.moving_average = None
-
-    def plot(self):
-        time_frame = range(len(self.data))
-        title = 'Price chart'
-        fig = plt.figure(title)
-        fig.add_subplot()
-        plt.title = title
-        plt.grid = True
-        plt.xlabel = 'Time'
-        plt.ylabel = 'Price'
-        plt.plot(time_frame, self.data, label=self.share_name)
-        plt.plot(time_frame, self.moving_average, label=self.moving_average_name)
-        plt.legend()
-        plt.show()
 
 
 class SimpleMovingAverage(MovingAverage):
@@ -53,7 +39,6 @@ class ExponentialMovingAverage(MovingAverage):
             ema_previous = ema
         self.moving_average = moving_average
         return None
-
 
 
 class SmoothedMovingAverage(MovingAverage):
@@ -90,22 +75,18 @@ class LinearWeightedMovingAverage(MovingAverage):
             lwma = numerator / denominator
             moving_average += [lwma]
         self.moving_average = moving_average
-
-
-def get_random_bars(num_of_frames):
-    bars = []
-    for i in range(num_of_frames):
-        random_bar = random.randint(-5, 5)
-        bars = bars + [random_bar]
-    return bars
+        return None
 
 
 if __name__ == '__main__':
     print('*' * 125)
     data = get_random_bars(500)
-    # ma = SimpleMovingAverage('sma', 50, 'AAPL', data)
-    # ma = ExponentialMovingAverage('ema', 50, 'AAPL', data)
-    # ma = SmoothedMovingAverage('smma', 50, 'AAPL', data)
-    ma = LinearWeightedMovingAverage('lwma', 50, 'AAPL', data)
-    ma.get_moving_average()
-    ma.plot()
+    sma = SimpleMovingAverage('sma', 50, 'AAPL', data)
+    ema = ExponentialMovingAverage('ema', 50, 'AAPL', data)
+    smma = SmoothedMovingAverage('smma', 50, 'AAPL', data)
+    lwma = LinearWeightedMovingAverage('lwma', 50, 'AAPL', data)
+    averages = (sma, ema, smma, lwma)
+    for ma in averages:
+        ma.get_moving_average()
+    plotter = Plotter(data, *averages)
+    plotter.plot()

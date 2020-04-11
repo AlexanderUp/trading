@@ -19,12 +19,25 @@ class MovingFrame():
 if __name__ == '__main__':
     import time
     print('=' * 125)
-    # data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-    data = [i for i in range(10000000)]
+    numbers = 25000000
+    length = 1000
+    data = [i for i in range(numbers)]
+    print('---- doing {} times, length {} ----'.format(numbers, length))
+    moving_frame = MovingFrame(length, data)
     time_start = time.time()
-    moving_frame = MovingFrame(4, data)
+    count = 0
     for frame in moving_frame:
-        # print('{} => sum: {}, length: {}'.format(frame, sum(frame), len(frame)))
+        sum(frame)
         continue
-    print('---- Elapsed time: {} seconds ----'.format(time.time()-time_start))
+    time_end = time.time()
+    print('---- deque ----')
+    print('---- Elapsed time: {} seconds ----'.format(time_end - time_start))
+    i_list = [0] * length
+    time_start = time.time()
+    for i in data:
+        i_list = i_list[1:] + [i]
+        sum(i_list)
+    time_end = time.time()
+    print('---- list ----')
+    print('---- Elapsed time: {} seconds ----'.format(time_end - time_start))
     print('-' * 125)
