@@ -6,31 +6,19 @@ import collections
 
 class MovingFrame():
 
-    '''Priming frame one value by one (providing one value at the time).'''
-
+    '''Priming initial frame by sequence of first n values of the data.'''
     def __init__(self, length, data):
         self.length = length
         self.deq = collections.deque(maxlen=self.length)
         self.data = data
+        for value in self.data[:self.length]:
+            self.deq.append(value)
 
     def __iter__(self):
-        for item in self.data:
+        yield self.deq
+        for item in self.data[self.length:]:
             self.deq.append(item)
             yield self.deq
-
-    # '''Priming initial frame by sequence of first n values in the data.'''
-    # def __init__(self, length, data):
-    #     self.length = length
-    #     self.deq = collections.deque(maxlen=self.length)
-    #     self.data = data
-    #     for value in self.data[:self.length]:
-    #         self.deq.append(value)
-    #
-    # def __iter__(self):
-    #     yield self.deq
-    #     for item in self.data[self.length:]:
-    #         self.deq.append(item)
-    #         yield self.deq
 
 
 if __name__ == '__main__':

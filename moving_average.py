@@ -9,11 +9,11 @@ from aux import get_random_bars
 class MovingAverage():
 
     def __init__(self, ma_name, period, data):
-        self.moving_average_name = ma_name
+        self.indicator_name = ma_name
         self.period = period
         self.data = data
         self.moving_frame = MovingFrame(length=self.period, data=self.data)
-        self.moving_average = None
+        self.indicator = None
 
 
 class SimpleMovingAverage(MovingAverage):
@@ -22,14 +22,13 @@ class SimpleMovingAverage(MovingAverage):
         moving_average = []
         for frame in self.moving_frame:
             moving_average.append(sum(frame)/len(frame))
-        self.moving_average = moving_average
+        self.indicator = moving_average
         return None
 
 
 class ExponentialMovingAverage(MovingAverage):
 
     def get_moving_average(self):
-        # n = len(self.data)
         n = self.period
         r = 2 / (n + 1)
         ema_previous = self.data[0]
@@ -38,14 +37,13 @@ class ExponentialMovingAverage(MovingAverage):
             ema = r * price + (1 - r) * ema_previous
             moving_average.append(ema)
             ema_previous = ema
-        self.moving_average = moving_average
+        self.indicator = moving_average
         return None
 
 
 class SmoothedMovingAverage(MovingAverage):
 
     def get_moving_average(self):
-        # n = len(self.data)
         n = self.period
         smma_previous = 0
         moving_average = []
@@ -53,7 +51,7 @@ class SmoothedMovingAverage(MovingAverage):
             smma = (price + (n - 1) * smma_previous) / n
             moving_average.append(smma)
             smma_previous = smma
-        self.moving_average = moving_average
+        self.indicator = moving_average
         return None
 
 
@@ -68,7 +66,7 @@ class LinearWeightedMovingAverage(MovingAverage):
             denominator += (i + 1)
             lwma = numerator / denominator
             moving_average.append(lwma)
-        self.moving_average = moving_average
+        self.indicator = moving_average
         return None
 
 

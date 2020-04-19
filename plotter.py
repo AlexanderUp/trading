@@ -23,7 +23,7 @@ class Plotter():
         plt.ylabel = 'Price'
         plt.plot(time_frame, self.data, label=self.share_name)
         for f in self.functions:
-            plt.plot(time_frame, f.moving_average, label=f.moving_average_name)
+            plt.plot(time_frame[(len(time_frame) - len(f.indicator)):], f.indicator, label=f.indicator_name)
         plt.legend()
         plt.show()
         return None
