@@ -1,22 +1,35 @@
 # encoding:utf-8
 # moving average trading technical indicator
 
+
 from moving_frame import MovingFrame
-from plotter import Plotter
-from aux import get_random_bars
 
 
 class MovingAverage():
 
-    def __init__(self, ma_name, period, data):
-        self.indicator_name = ma_name
+    full_indicator_names = {'sma':'Simple Moving Average',
+                            'ema':'Exponential Moving Average',
+                            'smma':'Smoothed Moving Average',
+                            'lwma':'LinearWeightedMovingAverage'}
+
+    def __init__(self, period, data):
         self.period = period
         self.data = data
         self.moving_frame = MovingFrame(length=self.period, data=self.data)
         self.indicator = None
 
+    def __repr__(self):
+        name = '{}'.format(self.full_indicator_names[self.indicator_name])
+        period = 'period = {:<3}'.format(self.period)
+        id_ = 'id = {}'.format(id(self))
+        return ' - '.join((name, period, id_))
+
 
 class SimpleMovingAverage(MovingAverage):
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'sma'
 
     def get_moving_average(self):
         moving_average = []
@@ -27,6 +40,10 @@ class SimpleMovingAverage(MovingAverage):
 
 
 class ExponentialMovingAverage(MovingAverage):
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'ema'
 
     def get_moving_average(self):
         n = self.period
@@ -43,6 +60,10 @@ class ExponentialMovingAverage(MovingAverage):
 
 class SmoothedMovingAverage(MovingAverage):
 
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'smma'
+
     def get_moving_average(self):
         n = self.period
         smma_previous = 0
@@ -57,29 +78,19 @@ class SmoothedMovingAverage(MovingAverage):
 
 class LinearWeightedMovingAverage(MovingAverage):
 
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'lwma'
+
     def get_moving_average(self):
         moving_average = []
-        numerator = 0
-        denominator = 0
-        for i, price in enumerate(self.data):
-            numerator += (i + 1) * price
-            denominator += (i + 1)
+        for frame in self.moving_frame:
+            numerator = 0
+            denominator = 0
+            for i, price in enumerate(frame):
+                numerator += (i + 1) * price
+                denominator += (i + 1)
             lwma = numerator / denominator
             moving_average.append(lwma)
         self.indicator = moving_average
         return None
-
-
-if __name__ == '__main__':
-    print('*' * 125)
-    share_name = 'AAPL'
-    data = get_random_bars(500)
-    sma = SimpleMovingAverage('sma', 50, data)
-    ema = ExponentialMovingAverage('ema', 50, data)
-    smma = SmoothedMovingAverage('smma', 50, data)
-    lwma = LinearWeightedMovingAverage('lwma', 50, data)
-    averages = (sma, ema, smma, lwma)
-    for ma in averages:
-        ma.get_moving_average()
-    plotter = Plotter(share_name, data, *averages)
-    plotter.plot()

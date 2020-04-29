@@ -6,18 +6,26 @@ from aux import get_random_bars
 from plotter import Plotter
 
 
-class RSI():
+class Oscillator():
+
+    def __init__(self, name, period, data):
+        self.indicator_name = name
+        self.period = period
+        self.data = data
+        self.moving_frame = MovingFrame(self.period, self.data)
+        self.indicator = None
+
+
+class RSI(Oscillator):
+
+    VERY_HUGE_NUMBER = 1000000000
+
     '''
-    RSI = 100 — (100 / (1 + U / D)), где:
+    RSI = 100 — (100 / (1 + RS)),
+    RS = U / D, где:
     U — среднее значение положительных ценовых изменений;
     D — среднее значение отрицательных ценовых изменений.
     '''
-    def __init__(self, name, length, data):
-        self.indicator_name = name
-        self.length = length
-        self.data = data
-        self.moving_frame = MovingFrame(self.length, self.data)
-        self.indicator = None
 
     def _get_current_frame_rsi(self, frame):
         count_ascending = 0
@@ -31,11 +39,16 @@ class RSI():
             if frame[i] > frame[i+1]:
                 count_descending += 1
                 value_descending += frame[i] - frame[i+1]
-        average_ascending = value_ascending / count_ascending
-        average_descending = value_descending / count_descending
+        try:
+            average_ascending = value_ascending / count_ascending
+        except ZeroDivisionError as err:
+            average_ascending = 0
+        try:
+            average_descending = value_descending / count_descending
+        except ZeroDivisionError as err:
+            average_descending = self.VERY_HUGE_NUMBER ** (-1)
         current_frame_rsi = 100 - (100 / (1 + average_ascending / average_descending))
         return current_frame_rsi
-
 
     def get_rsi_values(self):
         rsi_values = []
@@ -46,25 +59,29 @@ class RSI():
         return None
 
 
+class EmaRSI(RSI):
+
+    '''
+    RSI = 100 — (100 / (1 + RS)),
+    RS = EMA(U) / EMA(D), где:
+    EMA - экспоненциальная скользящая средняя;
+    U — среднее значение положительных ценовых изменений;
+    D — среднее значение отрицательных ценовых изменений.
+    '''
+    pass
+
+
 class AwesomeOscillator():
     pass
+
 
 class Stochastic():
     pass
 
+
 class MACD():
     pass
 
+
 class MACDHistogram():
     pass
-
-
-if __name__ == '__main__':
-    print('=' * 125)
-    data = get_random_bars(500)
-    length = 10
-    rsi = RSI('RSI', length, data)
-    rsi.get_rsi_values()
-    print('{:-^21}'.format('RSI'))
-    plotter = Plotter('AAPL', data, rsi)
-    plotter.plot()
