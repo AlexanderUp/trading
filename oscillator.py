@@ -2,18 +2,18 @@
 # oscillators for trading
 
 from moving_frame import MovingFrame
-from aux import get_random_bars
-from plotter import Plotter
 
 
 class Oscillator():
 
-    def __init__(self, name, period, data):
-        self.indicator_name = name
+    def __init__(self, period, data):
         self.period = period
         self.data = data
         self.moving_frame = MovingFrame(self.period, self.data)
         self.indicator = None
+
+    def __repr__(self):
+        return 'Oscillator - {} - id: {}'.format(self.indicator_name, id(self))
 
 
 class RSI(Oscillator):
@@ -26,6 +26,10 @@ class RSI(Oscillator):
     U — среднее значение положительных ценовых изменений;
     D — среднее значение отрицательных ценовых изменений.
     '''
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'RSI'
 
     def _get_current_frame_rsi(self, frame):
         count_ascending = 0
@@ -68,20 +72,35 @@ class EmaRSI(RSI):
     U — среднее значение положительных ценовых изменений;
     D — среднее значение отрицательных ценовых изменений.
     '''
-    pass
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'EMA_RSI'
 
 
 class AwesomeOscillator():
-    pass
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'AwesomeOscillator'
 
 
 class Stochastic():
-    pass
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'Stochastic'
 
 
 class MACD():
-    pass
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'MACD'
 
 
 class MACDHistogram():
-    pass
+
+    def __init__(self, period, data):
+        super().__init__(period, data)
+        self.indicator_name = 'MACDHistogram'

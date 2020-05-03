@@ -18,19 +18,36 @@ class Plotter():
         self.functions = [*args]
         print(*self.functions, sep='\n')
 
-    def plot(self):
+    def plot_ma(self):
         title = 'Price chart'
         fig = plt.figure(title)
-        fig.add_subplot()
         plt.title = title
-        plt.grid = True
-        plt.xlabel = 'Time'
-        plt.ylabel = 'Price'
-        plt.plot_date(mpl.dates.date2num(self.dates), self.prices, linestyle='-', label=self.share_name)
+        plt.grid(True)
+        plt.xlabel('Time, years')
+        plt.ylabel('Price, USD')
+        plt.plot_date(mpl.dates.date2num(self.dates), self.prices, label=self.share_name, linestyle='-', marker=',')
         for f in self.functions:
-            plt.plot(self.dates[(len(self.dates) - len(f.indicator)):], f.indicator, label=f.indicator_name + '-{}'.format(str(f.period)))
-        # plt.subplots()
+            plt.plot(self.dates[(len(self.dates) - len(f.indicator)):], f.indicator, label='{}-{}'.format(f.indicator_name, str(f.period)))
         plt.legend()
+        plt.show()
+        return None
+
+    def plot_osc(self):
+        title = 'Price chart'
+        fig = plt.figure(title)
+        plt.title = title
+        for f in self.functions:
+            ax1 = fig.add_subplot(2, 1, 1)
+            ax1.plot_date(mpl.dates.date2num(self.dates), self.prices, label=self.share_name, linestyle='-', marker=',')
+            ax1.set_ylabel('Price, USD')
+            ax1.grid(True)
+            ax1.legend()
+            ax2 = fig.add_subplot(2, 1, 2, sharex=ax1)
+            ax2.plot(self.dates[(len(self.dates) - len(f.indicator)):], f.indicator, label='{}-{}'.format(f.indicator_name, str(f.period)), color='r')
+            ax2.set_xlabel('Time, years')
+            ax2.set_ylabel('RSI, %')
+            ax2.grid(True)
+            ax2.legend()
         plt.show()
         return None
 
@@ -58,12 +75,12 @@ if __name__ == '__main__':
     for ma in averages:
         ma.get_moving_average()
     plotter = Plotter(share_name, data, *averages)
-    plotter.plot()
+    plotter.plot_ma()
 
     ''' **** Oscillator **** '''
     oscillator_period = 10
     print('{:-^21}'.format('RSI'))
-    rsi = oscillator.RSI('RSI', oscillator_period, [price for (date, price) in data])
+    rsi = oscillator.RSI(oscillator_period, [price for (date, price) in data])
     rsi.get_rsi_values()
     plotter_osc = Plotter(share_name, data, rsi)
-    plotter_osc.plot()
+    plotter_osc.plot_osc()

@@ -7,10 +7,10 @@ from moving_frame import MovingFrame
 
 class MovingAverage():
 
-    full_indicator_names = {'sma':'Simple Moving Average',
-                            'ema':'Exponential Moving Average',
-                            'smma':'Smoothed Moving Average',
-                            'lwma':'LinearWeightedMovingAverage'}
+    full_indicator_names = {'SMA':'Simple Moving Average',
+                            'EMA':'Exponential Moving Average',
+                            'SMMA':'Smoothed Moving Average',
+                            'LWMA':'LinearWeightedMovingAverage'}
 
     def __init__(self, period, data):
         self.period = period
@@ -21,7 +21,7 @@ class MovingAverage():
     def __repr__(self):
         name = '{}'.format(self.full_indicator_names[self.indicator_name])
         period = 'period = {:<3}'.format(self.period)
-        id_ = 'id = {}'.format(id(self))
+        id_ = 'id: {}'.format(id(self))
         return ' - '.join((name, period, id_))
 
 
@@ -29,7 +29,7 @@ class SimpleMovingAverage(MovingAverage):
 
     def __init__(self, period, data):
         super().__init__(period, data)
-        self.indicator_name = 'sma'
+        self.indicator_name = 'SMA'
 
     def get_moving_average(self):
         moving_average = []
@@ -43,7 +43,7 @@ class ExponentialMovingAverage(MovingAverage):
 
     def __init__(self, period, data):
         super().__init__(period, data)
-        self.indicator_name = 'ema'
+        self.indicator_name = 'EMA'
 
     def get_moving_average(self):
         n = self.period
@@ -62,7 +62,7 @@ class SmoothedMovingAverage(MovingAverage):
 
     def __init__(self, period, data):
         super().__init__(period, data)
-        self.indicator_name = 'smma'
+        self.indicator_name = 'SMMA'
 
     def get_moving_average(self):
         n = self.period
@@ -80,7 +80,7 @@ class LinearWeightedMovingAverage(MovingAverage):
 
     def __init__(self, period, data):
         super().__init__(period, data)
-        self.indicator_name = 'lwma'
+        self.indicator_name = 'LWMA'
 
     def get_moving_average(self):
         moving_average = []
