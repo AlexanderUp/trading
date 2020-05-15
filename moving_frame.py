@@ -7,10 +7,10 @@ import collections
 class MovingFrame():
 
     '''Priming initial frame by sequence of first n values of the data.'''
-    def __init__(self, length, data):
+    def __init__(self, data, length):
+        self.data = data
         self.length = length
         self.deq = collections.deque(maxlen=self.length)
-        self.data = data
         for value in self.data[:self.length]:
             self.deq.append(value)
 

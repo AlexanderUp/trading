@@ -12,10 +12,10 @@ class MovingAverage():
                             'SMMA':'Smoothed Moving Average',
                             'LWMA':'LinearWeightedMovingAverage'}
 
-    def __init__(self, period, data):
+    def __init__(self, data, period):
         self.period = period
         self.data = data
-        self.moving_frame = MovingFrame(length=self.period, data=self.data)
+        self.moving_frame = MovingFrame(data=self.data, length=self.period)
         self.indicator = None
 
     def __repr__(self):
@@ -27,8 +27,8 @@ class MovingAverage():
 
 class SimpleMovingAverage(MovingAverage):
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'SMA'
 
     def get_moving_average(self):
@@ -41,8 +41,8 @@ class SimpleMovingAverage(MovingAverage):
 
 class ExponentialMovingAverage(MovingAverage):
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'EMA'
 
     def get_moving_average(self):
@@ -60,8 +60,8 @@ class ExponentialMovingAverage(MovingAverage):
 
 class SmoothedMovingAverage(MovingAverage):
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'SMMA'
 
     def get_moving_average(self):
@@ -78,8 +78,8 @@ class SmoothedMovingAverage(MovingAverage):
 
 class LinearWeightedMovingAverage(MovingAverage):
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'LWMA'
 
     def get_moving_average(self):

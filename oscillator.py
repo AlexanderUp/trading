@@ -6,10 +6,10 @@ from moving_frame import MovingFrame
 
 class Oscillator():
 
-    def __init__(self, period, data):
+    def __init__(self, data, period):
         self.period = period
         self.data = data
-        self.moving_frame = MovingFrame(self.period, self.data)
+        self.moving_frame = MovingFrame(self.data, self.period)
         self.indicator = None
 
     def __repr__(self):
@@ -27,11 +27,11 @@ class RSI(Oscillator):
     D — среднее значение отрицательных ценовых изменений.
     '''
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'RSI'
 
-    def _get_current_frame_rsi(self, frame):
+    def _get_current_frame_value(self, frame):
         count_ascending = 0
         value_ascending = 0
         count_descending = 0
@@ -54,11 +54,11 @@ class RSI(Oscillator):
         current_frame_rsi = 100 - (100 / (1 + average_ascending / average_descending))
         return current_frame_rsi
 
-    def get_rsi_values(self):
+    def get_oscillator_values(self):
         rsi_values = []
         for frame in self.moving_frame:
-            current_frame_rsi = self._get_current_frame_rsi(frame)
-            rsi_values.append(current_frame_rsi)
+            _get_current_frame_value = self._get_current_frame_value(frame)
+            rsi_values.append(_get_current_frame_value)
         self.indicator = rsi_values
         return None
 
@@ -73,34 +73,26 @@ class EmaRSI(RSI):
     D — среднее значение отрицательных ценовых изменений.
     '''
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'EMA_RSI'
-
-
-class AwesomeOscillator():
-
-    def __init__(self, period, data):
-        super().__init__(period, data)
-        self.indicator_name = 'AwesomeOscillator'
 
 
 class Stochastic():
 
-    def __init__(self, period, data):
-        super().__init__(period, data)
+    '''
+    Stochastics can be broken down into two lines; %K and %D.
+
+    %K is the percentage of the price at closing (K) within the price range of the number of bars used in the look-back period.
+    %K = SMA(100 * (Current Close - Lowest Low) / (Highest High - Lowest Low), smoothK)
+    
+    %D is a smoothed average of %K, to minimize whipsaws while remaining in the larger trend.
+    %D = SMA(%K, periodD)
+
+    Lowest Low = The lowest price within the number of recent bars in the look-back period (periodK input)
+    Highest High = The highest price within the number of recent bars in the look-back period (periodK input)
+    '''
+
+    def __init__(self, data, period):
+        super().__init__(data, period)
         self.indicator_name = 'Stochastic'
-
-
-class MACD():
-
-    def __init__(self, period, data):
-        super().__init__(period, data)
-        self.indicator_name = 'MACD'
-
-
-class MACDHistogram():
-
-    def __init__(self, period, data):
-        super().__init__(period, data)
-        self.indicator_name = 'MACDHistogram'
