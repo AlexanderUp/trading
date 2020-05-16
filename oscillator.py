@@ -2,18 +2,19 @@
 # oscillators for trading
 
 from moving_frame import MovingFrame
+from moving_average import SimpleMovingAverage
 
 
 class Oscillator():
 
     def __init__(self, data, period):
-        self.period = period
         self.data = data
+        self.period = period
         self.moving_frame = MovingFrame(self.data, self.period)
         self.indicator = None
 
     def __repr__(self):
-        return 'Oscillator - {} - id: {}'.format(self.indicator_name, id(self))
+        return '{} - period: {} - id: {}'.format(self.indicator_name, self.period, id(self))
 
 
 class RSI(Oscillator):
@@ -78,14 +79,14 @@ class EmaRSI(RSI):
         self.indicator_name = 'EMA_RSI'
 
 
-class Stochastic():
+class Stochastic(Oscillator):
 
     '''
     Stochastics can be broken down into two lines; %K and %D.
 
     %K is the percentage of the price at closing (K) within the price range of the number of bars used in the look-back period.
-    %K = SMA(100 * (Current Close - Lowest Low) / (Highest High - Lowest Low), smoothK)
-    
+    %K = 100 * (Current Close - Lowest Low) / (Highest High - Lowest Low)
+
     %D is a smoothed average of %K, to minimize whipsaws while remaining in the larger trend.
     %D = SMA(%K, periodD)
 
@@ -93,6 +94,26 @@ class Stochastic():
     Highest High = The highest price within the number of recent bars in the look-back period (periodK input)
     '''
 
-    def __init__(self, data, period):
-        super().__init__(data, period)
+    def __init__(self, data, period_K, period_D):
+        super().__init__(data, period=period_K)
         self.indicator_name = 'Stochastic'
+        self.period_D = period_D
+        self.smoothed_average = None
+
+    def __repr__(self):
+        return '{} - period_K: {} - priod_D: {} - id: {}'.format(self.indicator_name, self.period, self.period_D, id(self))
+
+
+    def get_oscillator_values(self):
+        indicator_values = []
+        for frame in self.moving_frame:
+            lowest_low = min([d.close for d in frame])
+            highest_high = max([d.close for d in frame])
+            current_close = frame[-1].close
+            value = (current_close - lowest_low) / (highest_high - lowest_low) * 100
+            indicator_values.append(value)
+        self.indicator = indicator_values
+        smoothed_average = SimpleMovingAverage(self.indicator, self.period_D)
+        smoothed_average.get_moving_average()
+        self.smoothed_average = smoothed_average.indicator
+        return None

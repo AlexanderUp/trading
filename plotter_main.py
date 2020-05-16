@@ -18,7 +18,7 @@ share_name = sys.argv[-1].strip('.csv')[-4:]
 data = list(aux.get_historical_data(sys.argv[-1]))
 data.reverse()
 
-# ''' **** Moving Average **** '''
+''' **** Moving Average **** '''
 print('{:-^21}'.format('MOVING AVERAGE'))
 ma_period = 50
 sma = moving_average.SimpleMovingAverage([price.close for price in data], ma_period)
@@ -52,9 +52,18 @@ aosc.get_oscillator_values()
 plotter_osc = Plotter(share_name, data, aosc)
 plotter_osc.plot_trending_ind()
 
-''' **** MACD ****'''
+''' **** MACD **** '''
 print('{:-^21}'.format('MACD'))
 macd = trending_indicator.MACD(data)
 macd.get_indicator_values()
 plotter_macd = Plotter(share_name, data, macd)
 plotter_macd.plot_macd()
+
+''' **** Stochastic **** '''
+print('{:-^21}'.format('Stochastic'))
+period_K = 12
+period_D = 5
+stoch = oscillator.Stochastic(data, period_K, period_D)
+stoch.get_oscillator_values()
+plotter_stoch = Plotter(share_name, data, stoch)
+plotter_stoch.plot_stochastic()

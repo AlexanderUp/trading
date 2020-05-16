@@ -21,12 +21,12 @@ class AwesomeOscillator():
         self.indicator_name = 'Awesome Oscillator'
         self.data = data
         self.mid_prices = [0.5 * (d.max + d.min) for d in data]
-        self.sma34 = SimpleMovingAverage(self.mid_prices, 34)
         self.sma5 = SimpleMovingAverage(self.mid_prices, 5)
+        self.sma34 = SimpleMovingAverage(self.mid_prices, 34)
         self.indicator = None
 
     def __repr__(self):
-        return '{} - id: {}'.format(self.indicator_name, id(self))
+        return '{} - periods = (5, 34) - id: {}'.format(self.indicator_name, id(self))
 
     def get_oscillator_values(self):
         self.sma34.get_moving_average()
@@ -55,7 +55,7 @@ class MACD():
         self.macd_histogram = None
 
     def __repr__(self):
-        return '{} - id: {}'.format(self.indicator_name, id(self))
+        return '{} - periods = (12, 26) - id: {}'.format(self.indicator_name, id(self))
 
     def get_indicator_values(self):
         self.ema12.get_moving_average()
