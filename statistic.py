@@ -41,7 +41,7 @@ class StatisticCalc():
     def emission_clearance(self, source, average, quality_of_standard_deviation):
         lower_limit = average - quality_of_standard_deviation
         upper_limit = average + quality_of_standard_deviation
-        source = [x for x in source if x > upper_limit or x < lower_limit]
+        source = [x for x in source if x < upper_limit or x > lower_limit]
         return source
 
     def covariance(self, other):

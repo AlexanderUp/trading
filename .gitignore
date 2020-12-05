@@ -4,8 +4,9 @@
 *.sqlite3
 *.txt
 *.log
-*_config.py
 *.json
+*.csv
+*_config.py
 __pycache__/*
 myvenv/*
 static/*
@@ -14,3 +15,7 @@ output/*
 .DS_Store
 /*.jpg
 /out*.*
+/dataset_main/*
+/dataset_secondary/*
+/dataset_backup/*
+/dataset_aux/*

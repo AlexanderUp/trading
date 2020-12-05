@@ -1,42 +1,45 @@
 # encoding:utf-8
 # auxiliary function for trading modules
 
-import random
 import csv
-import io
-from datetime import datetime
 
+from datetime import datetime
 from collections import namedtuple
 
 
-data_frame = namedtuple('data_frame', 'date close open max min')
+Data_frame = namedtuple('Data_frame', 'date close open max min')
 
 
-def get_random_bars(num_of_frames):
-    return [random.randint(-5, 5) for i in range(num_of_frames)]
+def price_to_float(price):
+    price = ''.join(price.split('.'))
+    return float(price.replace(',', '.'))
 
-def to_float(num):
-    num = num.replace('.', '')
-    num = num.replace(',', '.')
-    return float(''.join(num))
+def get_data(file):
+    data = []
+    with open(file, 'r') as f:
+        reader = csv.DictReader(f)
+        for item in reader:
+            date = item['Date']
+            day, month, year = date.split('.')
+            date = datetime(int(year), int(month), int(day))
+            data.append(Data_frame(date, price_to_float(item['Open']), price_to_float(item['Close']), price_to_float(item['Max']), price_to_float(item['Min'])))
+    data.reverse()
+    return data
 
-def to_date(date):
-    day, month, year = date.split('.')
-    return datetime(int(year), int(month), int(day))
-
-def get_historical_data(file):
-    with open(file, 'r') as f_in:
-        reader = csv.reader(f_in)
-        next(reader)
-        for row in reader:
-            yield data_frame(to_date(row[0]), to_float(row[1]), to_float(row[2]), to_float(row[3]),to_float(row[4]))
-
+def align_data(data_outer, data_inner):
+    '''
+    Compare data lenghts and date eqvivalence.
+    '''
+    res_outer = []
+    res_inner = []
+    # data_outer = min(len(data_a), len(data_b))
+    # data_inner = max(len(data_a), len(data_b))
+    for data_point_outer in data_outer:
+        for data_point_inner in data_inner:
+            if data_point_outer.date == data_point_inner.date:
+                res_outer.append(data_point_outer)
+                res_inner.append(data_point_inner)
+    return res_outer, res_inner
 
 if __name__ == '__main__':
-    import sys
-    print('=' * 125)
-    file = sys.argv[-1]
-    data = list(get_historical_data(file))
-    data.reverse()
-    print('{:*^30}'.format('DATA'))
-    print(*data, sep='\n')
+    print('*' * 125)

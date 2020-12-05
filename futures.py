@@ -1,42 +1,19 @@
 # encoding:utf-8
 # analysis of futures trading
 
-
 import os
-import csv
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-
 import statistic
 
-
-from collections import namedtuple
-from datetime import datetime
+from aux import get_data
 
 
-Futures = namedtuple('futures', 'date open high low close')
+FUTURES_RTS = './dataset_aux/RTS.csv'
+FUTURES_GOLD = './dataset_aux/GOLD.csv'
+FUTURES_MIX = './dataset_aux/MIX.csv'
 
-
-FUTURES_RTS = os.path.expanduser('~/Downloads/RTS.csv')
-FUTURES_GOLD = os.path.expanduser('~/Downloads/GOLD.csv')
-FUTURES_MIX = os.path.expanduser('~/Downloads/MIX.csv')
-
-
-def convert_price(price):
-    price = ''.join(price.split('.'))
-    return float(price.replace(',', '.'))
-
-def get_data(file):
-    data = []
-    with open(file, 'r') as f:
-        reader = csv.DictReader(f)
-        for item in reader:
-            date = item['Date']
-            year, month, day = reversed(date.split('.'))
-            date = datetime(int(year), int(month), int(day))
-            data.append(Futures(date, convert_price(item['Open']), convert_price(item['Close']), convert_price(item['Max']), convert_price(item['Min'])))
-    return data
 
 def plot_future_data(future_name, data, depo, currency):
     title = f'Future <{future_name}>'
@@ -106,6 +83,10 @@ if __name__ == '__main__':
 
     data_mix = [future.close for future in get_data(FUTURES_MIX)]
     statistic_mix = statistic.StatisticCalc(data_mix)
+
+    print(len(data_rts))
+    print(len(data_gold))
+    print(len(data_mix))
 
     print('***** Correlation *****')
 
