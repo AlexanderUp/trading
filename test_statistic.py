@@ -19,8 +19,6 @@ class Test_Statistic(unittest.TestCase):
     def test_median(self):
         self.assertEqual(self.calc.median, 6)
 
-    # @unittest.expectedFailure
-    # @unittest.skip
     def test_mode(self):
         self.assertEqual(self.calc.mode, 6)
 
@@ -33,16 +31,13 @@ class Test_Statistic(unittest.TestCase):
     def test_quality_of_standard_deviation(self):
         self.assertAlmostEqual(self.calc.quality_of_standard_deviation, 5.393599, 5)
 
-    # @unittest.expectedFailure
     def test_covariance(self, other_sequence=OTHER_SEQUENCE):
         other = StatisticCalc(other_sequence)
-        self.assertAlmostEqual(self.calc.covariance(other), -10.727273, 5) # -10.727273
+        self.assertAlmostEqual(self.calc.covariance(other), -10.727273, 5)
 
-    # @unittest.expectedFailure
     def test_correlation(self, other_sequence=OTHER_SEQUENCE):
         other = StatisticCalc(other_sequence)
-        self.assertAlmostEqual(self.calc.correlation(other), -0.235586, 5) # -0.235586
+        self.assertAlmostEqual(self.calc.correlation(other), -0.235586, 5)
 
 if __name__ == '__main__':
-    print('*' * 125)
     unittest.main()

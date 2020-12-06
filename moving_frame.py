@@ -21,6 +21,9 @@ class MovingFrame():
             if len(self.deq) == self.length:
                 yield self.deq
 
+    def __repr__(self):
+        return f'<Moving Frame (length={self.length}, id={id(self)})>'
+
 
 if __name__ == '__main__':
     print('=' * 125)
